@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -10,9 +10,10 @@ ARG PYINSTALLER_VERSION=3.6
 RUN set -x \
     && dpkg --add-architecture i386 \
     && apt-get update -qy \
-    && apt-get install --no-install-recommends -qfy apt-transport-https software-properties-common wget file \
-    && wget -nv https://dl.winehq.org/wine-builds/winehq.key \
-    && apt-key add winehq.key \
+    && apt-get install --no-install-recommends -qfy apt-transport-https software-properties-common \
+        wget \
+        file gpg-agent rename \
+    && wget -qO - https://dl.winehq.org/wine-builds/winehq.key | apt-key add - \
     && add-apt-repository 'https://dl.winehq.org/wine-builds/ubuntu/' \
     && apt-get update -qy \
     && apt-get install --no-install-recommends -qfy $WINE_VERSION winbind cabextract \
@@ -61,9 +62,8 @@ ENV W_TMP="$W_DRIVE_C/windows/temp/_$0"
 # install Microsoft Visual C++ Redistributable for Visual Studio 2017 dll files
 RUN set -x \
     && rm -f "$W_TMP"/* \
-    && wget -P "$W_TMP" https://download.visualstudio.microsoft.com/download/pr/11100230/15ccb3f02745c7b206ad10373cbca89b/VC_redist.x64.exe \
-    && cabextract -q --directory="$W_TMP" "$W_TMP"/VC_redist.x64.exe \
-    && cabextract -q --directory="$W_TMP" "$W_TMP/a10" \
+    && wget -P "$W_TMP" https://aka.ms/vs/17/release/vc_redist.x64.exe \
+    && cabextract -q --directory="$W_TMP" "$W_TMP"/vc_redist.x64.exe \
     && cabextract -q --directory="$W_TMP" "$W_TMP/a11" \
     && cd "$W_TMP" \
     && rename 's/_/\-/g' *.dll \
