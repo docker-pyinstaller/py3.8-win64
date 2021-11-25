@@ -63,7 +63,7 @@ ENV W_TMP="$W_DRIVE_C/windows/temp/_$0"
 RUN set -x \
     && rm -f "$W_TMP"/* \
     && wget -P "$W_TMP" https://download.visualstudio.microsoft.com/download/pr/11100230/15ccb3f02745c7b206ad10373cbca89b/VC_redist.x64.exe \
-    && cabextract -q --directory="$W_TMP" "$W_TMP"/vc_redist.x64.exe \
+    && cabextract -q --directory="$W_TMP" "$W_TMP"/VC_redist.x64.exe \
     && cabextract -q --directory="$W_TMP" "$W_TMP/a10" \
     && cabextract -q --directory="$W_TMP" "$W_TMP/a11" \
     && cd "$W_TMP" \
